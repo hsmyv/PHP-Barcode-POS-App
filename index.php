@@ -4,33 +4,45 @@ include_once "ui/connectdb.php";
 
 session_start();
 
-if(isset($_POST['btn_login'])){
+if (isset($_POST['btn_login'])) {
   $useremail = $_POST['txt_email'];
   $password = $_POST['txt_password'];
 
-  $select - $pdo->prepare("SELECT * FROM users where mail='$usermail' and password='$password'");
+  $select = $pdo->prepare("SELECT * from users where email='$useremail' AND password='$password'");
   $select->execute();
 
   $row = $select->fetch(PDO::FETCH_ASSOC);
 
-  if(is_array($row)){
+  if (is_array($row)) {
 
 
-  if($row['mail'] == $useremail AND $row['password'] == $password AND $row['role'] == "Admin"){
-      echo $success = "Login success by admin";
+    if ($row['email'] == $useremail and $row['password'] == $password and $row['role'] == "Admin") {
+      $_SESSION['status'] = "Login success by Admin";
+      $_SESSION['status_code'] = "success";
+
       header('refresh: 1; ui/dashboard.php');
-    }else if($row['mail'] == $useremail AND $row['password'] and $row['role'] == "User"){
-      echo $success = "Login success by user";
+
+
+      $_SESSION['userid'] = $row['id'];
+      $_SESSION['name'] = $row['name'];
+      $_SESSION['email'] = $row['email'];
+      $_SESSION['role'] = $row['role'];
+    } else if ($row['email'] == $useremail and $row['password'] and $row['role'] == "User") {
+
+      $_SESSION['status'] = "Login success by User";
+      $_SESSION['status_code'] = "success";
+
       header('refresh: 1; ui/user.php');
 
-  }else{
-      echo $error = "Incorrect email or password";
-
-
+      $_SESSION['userid'] = $row['id'];
+      $_SESSION['name'] = $row['name'];
+      $_SESSION['email'] = $row['email'];
+      $_SESSION['role'] = $row['role'];
+    }
+  } else {
+    $_SESSION['status'] = "Incorrect email or password";
+    $_SESSION['status_code'] = "error";
   }
-  }
-
-
 }
 ?>
 <!DOCTYPE html>
@@ -49,6 +61,10 @@ if(isset($_POST['btn_login'])){
   <link rel="stylesheet" href="../../plugins/icheck-bootstrap/icheck-bootstrap.min.css">
   <!-- Theme style -->
   <link rel="stylesheet" href="../../dist/css/adminlte.min.css">
+  <!-- SweetAlert2 -->
+  <link rel="stylesheet" href="../../plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css">
+  <!-- Toastr -->
+  <link rel="stylesheet" href="../../plugins/toastr/toastr.min.css">
 </head>
 
 <body class="hold-transition login-page">
@@ -64,7 +80,7 @@ if(isset($_POST['btn_login'])){
         <form action="" method="post">
           <div class="input-group mb-3">
 
-            <input type="email" class="form-control" placeholder="Email" name="txt-email">
+            <input type="email" class="form-control" placeholder="Email" name="txt_email" required>
 
             <div class="input-group-append">
               <div class="input-group-text">
@@ -74,7 +90,7 @@ if(isset($_POST['btn_login'])){
           </div>
           <div class="input-group mb-3">
 
-            <input type="password" class="form-control" placeholder="Password" name="txt_password">
+            <input type="password" class="form-control" placeholder="Password" name="txt_password" required>
 
             <div class="input-group-append">
               <div class="input-group-text">
@@ -114,6 +130,33 @@ if(isset($_POST['btn_login'])){
   <script src="../../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
   <!-- AdminLTE App -->
   <script src="../../dist/js/adminlte.min.js"></script>
+  <!-- SweetAlert2 -->
+  <script src="../../plugins/sweetalert2/sweetalert2.min.js"></script>
+  <!-- Toastr -->
+  <script src="../../plugins/toastr/toastr.min.js"></script>
 </body>
+
+<?php
+if (isset($_SESSION['status']) && $_SESSION['status'] != '') {
+}
+?>
+<script>
+  $(function() {
+    var Toast = Swal.mixin({
+      toast: true,
+      position: 'top-end',
+      showConfirmButton: false,
+      timer: 3000
+    });
+
+    Toast.fire({
+      icon: '<?php echo $_SESSION['status_code']; ?>',
+      title: '<?php echo $_SESSION['status']; ?>'
+    })
+  });
+</script>
+<?php
+unset($_SESSION['status']);
+?>
 
 </html>

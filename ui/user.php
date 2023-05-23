@@ -1,4 +1,12 @@
 <?php
+include_once 'connectdb.php';
+session_start();
+
+
+if ($_SESSION['mail'] == "" OR $_SESSION['role'] == "Admin") {
+  header('location:../index.php');
+}
+
 include_once "headeruser.php";
 ?>
 
