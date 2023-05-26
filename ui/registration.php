@@ -2,7 +2,42 @@
 
 include_once 'connectdb.php';
 session_start();
-include_once "header.php";
+
+
+if ($_SESSION['email'] == "" OR $_SESSION['role'] == "User") {
+  header("location:../index.php");
+}
+
+if ($_SESSION['role'] == "Admin") {
+  include_once "header.php";
+} else {
+  include_once "headeruser.php";
+}
+
+
+error_reporting(0);
+
+$id = $_GET['id'];
+
+if(isset($id)){
+  $delete = $pdo->prepare("delete from users where id = $id");
+
+  if($delete->execute()){
+    $_SESSION['status'] = "Account deleted successfully";
+    $_SESSION['status_code'] = "Success";
+  }else{
+    $_SESSION['status'] = "Account is not deleted";
+    $_SESSION['status_code'] = "Warning";
+  }
+}
+
+
+
+
+
+
+
+
 
 if (isset($_POST['btnsave'])) {
   $username = $_POST['txtname'];
@@ -130,7 +165,7 @@ if (isset($_POST['btnsave'])) {
                       <td>' . $row->password . '</td>
                       <td>' . $row->role . '</td>
                       <td>
-                        <a href="registration.php?id=''"> </a>
+                        <a href="registration.php?id='.$row->id.'" class="btn btn-danger"><i class="fa fa-trash-alt"></i></a>
                       </td>
                       </tr>';
                   }
@@ -153,8 +188,6 @@ if (isset($_POST['btnsave'])) {
 include_once "footer.php";
 ?>
 
-
-?>
 
 <?php
 if (isset($_SESSION['status']) && $_SESSION['status'] != '') {

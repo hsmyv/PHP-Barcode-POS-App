@@ -2,9 +2,9 @@
 
 
 
-if ($_SESSION['mail'] == "") {
-  header("location:../index.php");
-}
+ if ($_SESSION['email'] == "") {
+   header("location:../index.php");
+ }
 
 if ($_SESSION['role'] == "Admin") {
   include_once "header.php";
@@ -17,13 +17,13 @@ if (isset($_POST['btnupdate'])) {
   $newpassword = $_POST['txt_newpassword'];
   $rnewpassword = $_POST['txt_rnewpassword'];
 
-  $email = $_SESSION['mail'];
+  $email = $_SESSION['email'];
 
-  $select = $pdo->prepare("select * from users where mail='$email'");
+  $select = $pdo->prepare("select * from users where email='$email'");
   $select->execute();
   $row = $select->fetch(PDO::FETCH_ASSOC);
 
-  $useremail_db = $row['mail'];
+  $useremail_db = $row['email'];
   $password_db = $row['password'];
 
   if ($oldpassword == $password_db) {
