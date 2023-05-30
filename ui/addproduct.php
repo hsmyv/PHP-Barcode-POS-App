@@ -7,7 +7,7 @@ include_once "header.php";
 
 if (isset($_POST['btnsave'])) {
   $barcode = $_POST['txtbarcode'];
-  $product = $_POST['txtproduct'];
+  $product = $_POST['txtname'];
   $category = $_POST['txtselect_option'];
   $description = $_POST['txtdescription'];
   $stock = $_POST['txtstock'];
@@ -29,33 +29,58 @@ if (isset($_POST['btnsave'])) {
       $_SESSION['status_code'] = "warning";
     } else {
       if (move_uploaded_file($f_tmp, $store)) {
-        $productimage - $f_newfile;
+        $productimage = $f_newfile;
 
-        if(empty($barcode)) {
-          $_SESSION['status'] = "bla bla bla";
-          $_SESSION['status_code'] = "warning";
-        }else{
-          $insert = $pdo->prepare("insert into product (barcode, product, category, description, stock, purchaseprice, saleprice, image)
-          values (:barcode, :product, :category, :description, :stock, :pprice :saleprice, :img)");
+        if (empty($barcode)) {
+          $insert = $pdo->prepare("INSERT INTO product (product, category, description, stock, purchaseprice, saleprice, image)
+          VALUES (:product, :category, :description, :stock, :pprice, :saleprice, :img)");
+
+          // $insert->bindParam(':barcode', $barcode);
+          $insert->bindParam(':product', $product);
+          $insert->bindParam(':category', $category);
+          $insert->bindParam(':description', $description);
+          $insert->bindParam(':stock', $stock);
+          $insert->bindParam(':pprice', $purchaseprice); // corrected variable name
+          $insert->bindParam(':saleprice', $saleprice);
+          $insert->bindParam(':img', $productimage);
+
+          $insert->execute();
+
+          $id = $pdo->lastInsertId();
+          date_default_timezone_set("Asia/Calcutta");
+          $newbarcode = $id . date('his');
+          $update = $pdo->prepare("UPDATE product SET barcode='$newbarcode' WHERE id='" . $id . "'");
+
+          if ($update->execute()) {
+            $_SESSION['status'] = "Product inserted successfully";
+            $_SESSION['status_code'] = "success";
+          } else {
+            $_SESSION['status'] = "Product not inserted Failed";
+            $_SESSION['status_code'] = "warning";
+          }
+        } else {
+          $insert = $pdo->prepare("INSERT INTO product (barcode, product, category, description, stock, purchaseprice, saleprice, image)
+          VALUES (:barcode, :product, :category, :description, :stock, :pprice, :saleprice, :img)");
 
           $insert->bindParam(':barcode', $barcode);
           $insert->bindParam(':product', $product);
           $insert->bindParam(':category', $category);
           $insert->bindParam(':description', $description);
           $insert->bindParam(':stock', $stock);
-          $insert->bindParam(':pprice', $pprice);
+          $insert->bindParam(':pprice', $purchaseprice); // corrected variable name
           $insert->bindParam(':saleprice', $saleprice);
-          $insert->bindParam(':img', $image);
+          $insert->bindParam(':img', $productimage);
 
-          if($insert->execute())
-          {
+
+
+
+          if ($insert->execute()) {
             $_SESSION['status'] = "Product inserted successfully";
             $_SESSION['status_code'] = "success";
-          }else{
+          } else {
             $_SESSION['status'] = "Product not inserted Failed";
             $_SESSION['status_code'] = "warning";
           }
-
         }
       }
     }
@@ -73,7 +98,7 @@ if (isset($_POST['btnsave'])) {
     <div class="container-fluid">
       <div class="row mb-2">
         <div class="col-sm-6">
-          <h1 class="m-0" Add Product></h1>
+          <h1 class="m-0">Add Product</h1>
         </div><!-- /.col -->
         <div class="col-sm-6">
           <ol class="breadcrumb float-sm-right">
@@ -100,13 +125,13 @@ if (isset($_POST['btnsave'])) {
             <div class="card-header">
               <h5 class="m-0">Product</h5>
             </div>
-            <form action="" method="POST">
+            <form action="" method="POST" enctype="multipart/form-data">
               <div class="card-body">
                 <div class="row">
                   <div class="col-md-6">
                     <div class="form-group">
                       <label for="exampleInputEmail1">Barcode</label>
-                      <input type="text" class="form-control" placeholder="Enter name" name="txtbarcode" required>
+                      <input type="text" class="form-control" placeholder="Enter name" name="txtbarcode">
                     </div>
                     <div class="form-group">
                       <label for="exampleInputEmail1">Product Name</label>
