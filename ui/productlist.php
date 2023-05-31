@@ -37,7 +37,7 @@ include_once "header.php";
               <h5 class="m-0">Prdouct list: </h5>
             </div>
             <div class="card-body">
-              <table class="table table-striped table-hover">
+              <table class="table table-striped table-hover" id="table_product">
                 <thead>
                   <tr>
                     <td>Barcode</td>
@@ -67,13 +67,13 @@ include_once "header.php";
                       <td>' . $row->stock . '</td>
                       <td>' . $row->purchaseprice . '</td>
                       <td>' . $row->saleprice . '</td>
-                      <td><image src="productimages/'.$row->image. '" class="img-rounded" width="40px" height="40px"/></td>
+                      <td><image src="productimages/' . $row->image . '" class="img-rounded" width="40px" height="40px"/></td>
                       <td>
                          <div class="btn-group">
-                        <a href="printbarcode.php?id"='.$row->id. '" class="btn btn-primary btn-xs" role="button"><span class="fa fa-barcode" style="color:#ffffff" data-toggle="tootltip" title="PrintBarcode"></span></a>
-                        <a href="viewproduct.php?id"='.$row->id. '" class="btn btn-warning btn-xs" role="button"><span class="fa fa-eye" style="color:#ffffff" data-toggle="tootltip" title="View Product"></span></a>
-                        <a href="editproduct.php?id"=' . $row->id . '" class="btn btn-success btn-xs" role="button"><span class="fa fa-edit" style="color:#ffffff" data-toggle="tootltip" title="Edit Product"></span></a>
-                        <button id='.$row->id.' class="btn btn-danger btn-xs"><span class="fa fa-trash" style="color:#ffffff" data-toggle="tooltip" title="Delete Product"></span></button>
+                        <a href="printbarcode.php?id=' . $row->id . '" class="btn btn-primary btn-xs" role="button"><span class="fa fa-barcode" style="color:#ffffff" data-toggle="tootltip" title="PrintBarcode"></span></a>
+                        <a href="viewproduct.php?id=' . $row->id . '" class="btn btn-warning btn-xs" role="button"><span class="fa fa-eye" style="color:#ffffff" data-toggle="tootltip" title="View Product"></span></a>
+                        <a href="editproduct.php?id=' . $row->id . '" class="btn btn-success btn-xs" role="button"><span class="fa fa-edit" style="color:#ffffff" data-toggle="tootltip" title="Edit Product"></span></a>
+                        <button id=' . $row->id . ' class="btn btn-danger btn-xs"><span class="fa fa-trash" style="color:#ffffff" data-toggle="tooltip" title="Delete Product"></span></button>
                       </div>
                       </td>
                     </tr>';
@@ -95,4 +95,20 @@ include_once "header.php";
 
 <?php
 include_once "footer.php";
+
+
 ?>
+
+
+<script>
+  $(document).ready(function() {
+    $('#table_product').DataTable();
+  });
+</script>
+
+
+<script>
+  $(document).ready(function() {
+    $('[data-toggle="tooltip"]').tooltip();
+  });
+</script>
