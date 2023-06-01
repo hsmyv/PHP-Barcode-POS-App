@@ -22,7 +22,7 @@ $saleprice = $row['saleprice'];
 $image_db = $row['image'];
 
 if (isset($_POST['btneditproduct'])) {
-  $barcode_txt = $_POST['txtbarcode'];
+  // $barcode_txt = $_POST['txtbarcode'];
   $product_txt = $_POST['txtname'];
   $category_txt = $_POST['txtselect_option'];
   $description_txt = $_POST['txtdescription'];
@@ -47,7 +47,7 @@ if (isset($_POST['btneditproduct'])) {
       } else {
         if (move_uploaded_file($f_tmp, $store)) {
           $f_newfile;
-          $update = $pdo->prepare('UPDATE product set product=:product, category=:category, description=:description, stock=:stock, purchaseprice=:pprice, saleprice=:sprice, image=:image');
+          $update = $pdo->prepare("UPDATE product set product=:product, category=:category, description=:description, stock=:stock, purchaseprice=:pprice, saleprice=:sprice, image=:image WHERE id=$id");
           $update->bindParam(':product', $product_txt);
           $update->bindParam(':category', $category_txt);
           $update->bindParam(':description', $description_txt);
@@ -65,9 +65,8 @@ if (isset($_POST['btneditproduct'])) {
         }
       }
     }
-
   } else {
-    $update = $pdo->prepare('UPDATE product set product=:product, category=:category, description=:description, stock=:stock, purchaseprice=:pprice, saleprice=:sprice, image=:image');
+    $update = $pdo->prepare("UPDATE product set product=:product, category=:category, description=:description, stock=:stock, purchaseprice=:pprice, saleprice=:sprice, image=:image WHERE id=$id");
     $update->bindParam(':product', $product_txt);
     $update->bindParam(':category', $category_txt);
     $update->bindParam(':description', $description_txt);
@@ -189,7 +188,7 @@ $image_db = $row['image'];
                     </div>
                     <div class="form-group">
                       <label>Product Image</label>
-                      <img src="productimages/<?php $image_db ?>" class="img-responsive"></img>
+                      <img src="productimages/<?php echo $image_db ?>" class="img-rounded" width="150px" height="150px" /></img>
                       <input type="file" class="input-group" placeholder="Enter name" name="myfile">
                       <p>Upload image</p>
                     </div>

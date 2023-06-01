@@ -73,7 +73,7 @@ include_once "header.php";
                         <a href="printbarcode.php?id=' . $row->id . '" class="btn btn-primary btn-xs" role="button"><span class="fa fa-barcode" style="color:#ffffff" data-toggle="tootltip" title="PrintBarcode"></span></a>
                         <a href="viewproduct.php?id=' . $row->id . '" class="btn btn-warning btn-xs" role="button"><span class="fa fa-eye" style="color:#ffffff" data-toggle="tootltip" title="View Product"></span></a>
                         <a href="editproduct.php?id=' . $row->id . '" class="btn btn-success btn-xs" role="button"><span class="fa fa-edit" style="color:#ffffff" data-toggle="tootltip" title="Edit Product"></span></a>
-                        <button id=' . $row->id . ' class="btn btn-danger btn-xs"><span class="fa fa-trash" style="color:#ffffff" data-toggle="tooltip" title="Delete Product"></span></button>
+                        <button id=' . $row->id . ' class="btn btn-danger btn-xs btndelete"><span class="fa fa-trash" style="color:#ffffff" data-toggle="tooltip" title="Delete Product"></span></button>
                       </div>
                       </td>
                     </tr>';
@@ -111,4 +111,42 @@ include_once "footer.php";
   $(document).ready(function() {
     $('[data-toggle="tooltip"]').tooltip();
   });
+</script>
+
+<script>
+  $(document).ready(function() {
+    $('.btndelete').click(function() {
+      console.log('asa');
+      var tdt = $(this);
+      var id = $(this).attr("id");
+
+      Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          $.ajax({
+            url: 'productdelete.php',
+            type: "POST",
+            data: {
+              id: id
+            },
+            success: function(data) {
+              tdt.parents('tr').hide();
+            }
+          });
+          Swal.fire(
+            'Deleted!',
+            'Your file has been deleted.',
+            'success'
+          )
+        }
+      })
+    });
+  })
 </script>

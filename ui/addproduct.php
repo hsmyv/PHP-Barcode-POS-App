@@ -149,7 +149,7 @@ if (isset($_POST['btnsave'])) {
                         while ($row = $select->fetch(PDO::FETCH_ASSOC)) {
                           extract($row);
                         ?>
-                          <option value=""><?php echo $row['name'] ?></option>
+                          <option value="<?php echo $row['name']?>"><?php echo $row['name'] ?></option>
                         <?php  } ?>
 
                       </select>
