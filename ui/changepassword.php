@@ -19,6 +19,7 @@ if (isset($_POST['btnupdate'])) {
 
   $email = $_SESSION['email'];
 
+
   $select = $pdo->prepare("select * from users where email='$email'");
   $select->execute();
   $row = $select->fetch(PDO::FETCH_ASSOC);
