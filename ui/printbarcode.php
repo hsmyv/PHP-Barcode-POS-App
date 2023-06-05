@@ -37,7 +37,7 @@ include_once "header.php";
               <h5 class="m-0">Generate Barcode Stickers: </h5>
             </div>
             <div class="card-body">
-              <form class="form-horizontal" method="post" action="barcode.php" target="_blank">
+              <form class="form-horizontal" method="post" action="barcode/barcode.php" target="_blank">
                 <?php
                 $id = $_GET['id'];
                 $select = $pdo->prepare("select * from product where id=$id");
@@ -54,19 +54,25 @@ include_once "header.php";
                       <div class="form-group">
                         <label class="control-label col-sm-2" for="product">Product:</label>
                         <div class="col-sm-10">
-                          <input autocomplete="OFF" type="text" class="form-control" id="product" name="product">
+                          <input value="'.$row->product. '" autocomplete="OFF" type="text" class="form-control" id="product" name="product" readonly>
                         </div>
                       </div>
                       <div class="form-group">
-                        <label class="control-label col-sm-2" for="product_id">Product ID:</label>
+                        <label class="control-label co l-sm-2" for="product_id">Product ID:</label>
                         <div class="col-sm-10">
-                          <input autocomplete="OFF" type="text" class="form-control" id="product_id" name="product_id">
+                          <input value="' . $row->barcode . '" autocomplete="OFF" type="text" class="form-control" id="barcode" name="barcode" readonly>
                         </div>
                       </div>
                       <div class="form-group">
-                        <label class="control-label col-sm-2" for="rate">Rate</label>
+                        <label class="control-label col-sm-2" for="rate">SalePrice</label>
                         <div class="col-sm-10">
-                          <input autocomplete="OFF" type="text" class="form-control" id="rate" name="rate">
+                          <input value="' . $row->saleprice . '" autocomplete="OFF" type="text" class="form-control" id="rate" name="rate" readonly>
+                        </div>
+                      </div>
+                       <div class="form-group">
+                        <label class="control-label col-sm-2" for="rate">Stock</label>
+                        <div class="col-sm-10">
+                          <input value="' . $row->stock . '" autocomplete="OFF" type="text" class="form-control" id="stock" name="stock" readonly>
                         </div>
                       </div>
                       <div class="form-group">
@@ -78,7 +84,7 @@ include_once "header.php";
 
                       <div class="form-group">
                         <div class="col-sm-offset-2 col-sm-10">
-                          <button type="submit" class="btn btn-default">Submit</button>
+                          <button type="submit" class="btn btn-primary">Generate Barcode</button>
                         </div>
                       </div>
                     </ul>
